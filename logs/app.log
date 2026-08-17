@@ -3,3 +3,6 @@
 2026-08-17 11:51:04 | INFO | __main__ | Loading data from /mnt/data/mailguard_edit/Spam-Classification/data/raw/emails.csv
 2026-08-17 11:51:04 | INFO | __main__ | Tuning Multinomial Naive Bayes...
 2026-08-17 11:51:29 | INFO | __main__ | Saved Naive Bayes model to /mnt/data/mailguard_edit/Spam-Classification/models/spam_classifier_pipeline.joblib
+2026-08-17 18:31:51 | INFO | __main__ | Loading data from E:\mail-guard-spam-filter\mail-guard-backup\data\raw\emails.csv
+2026-08-17 18:31:52 | INFO | __main__ | Tuning Multinomial Naive Bayes...
+2026-08-17 18:32:45 | INFO | __main__ | Saved Naive Bayes model to E:\mail-guard-spam-filter\mail-guard-backup\models\spam_classifier_pipeline.joblib

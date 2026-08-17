@@ -399,7 +399,7 @@ Option B — Retrain the Model
 
 To train the model again from the dataset:
 
-python src/train_model.py
+python .\src\train.py
 
 The script will:
 
@@ -499,7 +499,7 @@ For deployment, make sure these files are committed:
 app.py
 requirements.txt
 models/spam_classifier.joblib
-src/predict.py
+python .\src\predict.py
 
 If the deployment platform requires a specific Python version, pin the version according to that platform's current supported runtime.
 

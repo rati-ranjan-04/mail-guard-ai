@@ -1,0 +1,16 @@
+{
+  "model": "Multinomial Naive Bayes",
+  "best_params": {
+    "clf__alpha": 0.1
+  },
+  "best_cv_f1": 0.9697201830974637,
+  "test_metrics": {
+    "Accuracy": 0.9894644424934153,
+    "Precision": 0.9816176470588235,
+    "Recall": 0.9744525547445255,
+    "F1 Score": 0.978021978021978,
+    "ROC-AUC": 0.999286949917725,
+    "Model": "Multinomial Naive Bayes",
+    "Train Time (s)": 52.43
+  }
+}
