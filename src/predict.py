@@ -1,50 +1,111 @@
-"""
-predict.py
-----------
-Load the saved pipeline and run predictions on new email text.
-Used by app.py (Streamlit) and can also be run standalone:
-
-    python src/predict.py "your email text here"
-"""
+"""Prediction utility for the MailGuard spam classifier."""
 
 import sys
+from pathlib import Path
+
 import joblib
+
+from config import MODEL_PATH
 from preprocessing import clean_text
 
-MODEL_PATH = "models/spam_classifier_pipeline.joblib"
+
+def load_model():
+    """Load the trained spam classification pipeline."""
+
+    if not MODEL_PATH.exists():
+        raise FileNotFoundError(
+            f"Model not found: {MODEL_PATH}\n"
+            "Please train the model first using:\n"
+            "python src/train.py"
+        )
+
+    return joblib.load(MODEL_PATH)
 
 
-def load_model(path: str = MODEL_PATH):
-    return joblib.load(path)
-
-
-def predict_email(model, raw_text: str) -> dict:
+def predict_email(model, email_text):
     """
-    Clean the input text with the SAME preprocessing used in training,
-    then predict the class and (where available) a confidence score.
-    """
-    text = clean_text(raw_text)
-    label = int(model.predict([text])[0])
+    Predict whether an email is Spam or Ham.
 
-    confidence = None
-    if hasattr(model.named_steps["clf"], "predict_proba"):
-        confidence = float(model.predict_proba([text])[0][label])
-    elif hasattr(model, "decision_function"):
-        # LinearSVC has no predict_proba; use decision_function distance as a proxy signal
-        score = float(model.decision_function([text])[0])
-        confidence = score
+    Returns:
+        dict: Prediction label and probabilities.
+    """
+
+    if not email_text or not email_text.strip():
+        raise ValueError("Email text cannot be empty.")
+
+    cleaned_text = clean_text(email_text)
+
+    prediction = int(
+        model.predict([cleaned_text])[0]
+    )
+
+    probabilities = model.predict_proba(
+        [cleaned_text]
+    )[0]
+
+    ham_probability = float(probabilities[0])
+    spam_probability = float(probabilities[1])
+
+    if prediction == 1:
+        label = "Spam"
+    else:
+        label = "Ham"
 
     return {
-        "label": label,
-        "label_name": "Spam" if label == 1 else "Ham (Not Spam)",
-        "confidence_or_score": confidence,
+        "label": prediction,
+        "label_name": label,
+        "spam_probability": spam_probability,
+        "ham_probability": ham_probability,
     }
 
 
-if __name__ == "__main__":
+def main():
+    """Run prediction from the command line."""
+
     if len(sys.argv) < 2:
-        print("Usage: python src/predict.py \"email text here\"")
+        print(
+            'Usage: python src/predict.py "Your email text here"'
+        )
         sys.exit(1)
-    model = load_model()
-    result = predict_email(model, sys.argv[1])
-    print(result)
+
+    email_text = " ".join(sys.argv[1:])
+
+    try:
+        model = load_model()
+
+        result = predict_email(
+            model,
+            email_text
+        )
+
+        print("\nPrediction Result")
+        print("-----------------")
+        print(
+            f"Classification : {result['label_name']}"
+        )
+        print(
+            f"Spam Probability : "
+            f"{result['spam_probability'] * 100:.2f}%"
+        )
+        print(
+            f"Ham Probability  : "
+            f"{result['ham_probability'] * 100:.2f}%"
+        )
+
+    except FileNotFoundError as error:
+        print(f"\nError: {error}")
+        sys.exit(1)
+
+    except ValueError as error:
+        print(f"\nError: {error}")
+        sys.exit(1)
+
+    except Exception as error:
+        print(
+            f"\nPrediction failed: {error}"
+        )
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
