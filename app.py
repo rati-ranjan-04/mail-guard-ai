@@ -17,7 +17,7 @@ st.set_page_config(
 )
 
 st.title("📧 Spam Email Classifier")
-st.caption("TF-IDF + Multinomial Naive Bayes")
+st.caption("Multinomial Naive Bayes")
 
 @st.cache_resource
 def load_model():
@@ -59,4 +59,4 @@ if st.button("Check Email", type="primary", use_container_width=True):
             st.error(f"Prediction failed: {error}")
 
 st.divider()
-st.caption("Academic Machine Learning Project • Multinomial Naive Bayes")
+st.caption("Academic Machine Learning Project • Multinomial Naive Bayes • Rati Ranjan Mohapatra • IPSAR • MCA")
