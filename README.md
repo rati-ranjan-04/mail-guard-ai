@@ -176,7 +176,7 @@ mail-guard-ai/
 
 ```bash
 git clone https://github.com/rati-ranjan-04/mail-guard-ai.git
-cd mail-guard-ai
+cd mail-guard-backup
 ```
 
 ### 2. Create and activate a virtual environment

@@ -11,6 +11,6 @@
     "F1 Score": 0.978021978021978,
     "ROC-AUC": 0.999286949917725,
     "Model": "Multinomial Naive Bayes",
-    "Train Time (s)": 52.43
+    "Train Time (s)": 45.86
   }
 }
