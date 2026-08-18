@@ -59,5 +59,4 @@ if st.button("Check Email", type="primary", use_container_width=True):
             st.error(f"Prediction failed: {error}")
 
 st.divider()
-st.caption("Academic Machine Learning Project • Multinomial Naive Bayes \n
-           Rati Ranjan Mohapatra • IPSAR • MCA")
+st.caption("Academic Machine Learning Project • Multinomial Naive Bayes • Rati Ranjan Mohapatra • IPSAR • MCA")
