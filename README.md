@@ -1,643 +1,313 @@
-📧 Email Spam Classification System
+# Mail Guard AI
 
-Academic Machine Learning Project — Binary Text Classification
+## Email Spam Classification System
 
-An end-to-end Natural Language Processing (NLP) and Machine Learning project that classifies an email as Spam or Ham (Not Spam) from its text content.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://mail-guard-spam-filter-ai.streamlit.app/)
+[![Repository](https://img.shields.io/badge/Source-GitHub-181717?logo=github&logoColor=white)](https://github.com/rati-ranjan-04/mail-guard-ai)
 
-The project covers the complete ML lifecycle: data loading → cleaning → EDA → TF-IDF feature extraction → model training → hyperparameter tuning → evaluation → model serialization → Streamlit deployment.
+**Mail Guard AI** is an end-to-end Natural Language Processing and machine-learning project that classifies an email as **Spam** or **Ham (Not Spam)** from its text content. It includes data cleaning, exploratory analysis, TF-IDF feature extraction, model tuning, evaluation, model serialization, command-line inference, and a Streamlit web application.
 
-1. Project Overview
+> **Live application:** Try the deployed classifier at [mail-guard-spam-filter-ai.streamlit.app](https://mail-guard-spam-filter-ai.streamlit.app/).
 
-Problem Statement
+The project is intended as an academic and portfolio demonstration of a reproducible text-classification workflow. The model should be treated as a decision-support tool rather than a replacement for a production email-security system.
 
-Unwanted and fraudulent emails are a common problem for individuals and organizations. Manually identifying spam is inefficient and unreliable at scale.
+## Project Overview
 
-This project builds a supervised Machine Learning classifier that reads email text and predicts whether the message is:
+Unwanted and fraudulent email creates operational and security risks for individuals and organizations. This project addresses the problem as **binary text classification**:
 
-Spam (1): unwanted/suspicious email
+| Label | Meaning |
+| --- | --- |
+| `0` | Ham — legitimate or non-spam email |
+| `1` | Spam — unwanted or suspicious email |
 
-Ham (0): legitimate email
+The deployed application accepts pasted email text, applies the same preprocessing used during training, loads a serialized scikit-learn pipeline, and displays the predicted class together with Spam and Ham probabilities.
 
-Business Objective
+## Machine-Learning Workflow
 
-The objective is to develop a lightweight automated spam-filtering system that can assist users in identifying potentially unwanted emails before they are opened or processed further.
+The complete workflow is:
 
-Problem Type
+```text
+Raw email CSV
+    ↓
+Load data and remove duplicate rows
+    ↓
+Normalize email text and remove empty records
+    ↓
+Stratified 80/20 train-test split
+    ↓
+TF-IDF word and bigram features
+    ↓
+Multinomial Naive Bayes classifier
+    ↓
+GridSearchCV tuning using five-fold cross-validation
+    ↓
+Evaluation on the held-out test set
+    ↓
+Save the fitted pipeline with joblib
+    ↓
+Streamlit application and command-line prediction
+```
 
-Binary Text Classification
+## Dataset
 
-2. Dataset
+The repository contains the supplied dataset at `data/raw/emails.csv`. It has **5,728 data rows** and the columns `text` and `spam`. During training, duplicate rows are removed and the text is normalized; the training script also writes the cleaned dataset to `data/processed/emails_cleaned.csv`.
 
-The project uses the supplied emails.csv dataset.
+| Property | Value |
+| --- | --- |
+| Source file | `data/raw/emails.csv` |
+| Data rows | 5,728 |
+| Columns | `text`, `spam` |
+| Target column | `spam` |
+| Target values | `0 = Ham`, `1 = Spam` |
+| Split | 80% training / 20% test |
+| Random state | `42` |
+| Split strategy | Stratified by target label |
 
-Property
+The dataset is included for academic and reproducibility purposes. Before using the project with a different dataset, confirm that it provides the same `text` and `spam` columns and that labels are encoded as `0` and `1`.
 
-Details
+## Text Preprocessing and Features
 
-File
+The shared function in `src/preprocessing.py` is used during both training and inference, which helps prevent differences between the model-training and serving paths. It lowercases each message, removes a leading `Subject:` token, collapses repeated whitespace, strips surrounding whitespace, removes duplicate rows, and discards empty messages.
 
-data/emails.csv
+The model pipeline uses `TfidfVectorizer` with English stop-word removal, a maximum vocabulary of 5,000 features, and word n-grams from one to two words. TF-IDF converts raw text into numerical features while giving greater weight to terms that are informative within the email corpus.
 
-Initial rows
+## Model and Hyperparameter Tuning
 
-5,728
+The final pipeline is implemented with scikit-learn:
 
-Columns
-
-text, spam
-
-Target
-
-spam
-
-Target values
-
-0 = Ham, 1 = Spam
-
-Data type
-
-Real-world email text data
-
-Duplicate handling
-
-Duplicate rows removed during training
-
-After duplicate removal, 5,695 records were used for modeling.
-
-Note: The dataset is included in this project for academic/reproducibility purposes. If the dataset is too large or distribution is restricted for a GitHub submission, upload it separately or provide its source link instead.
-
-3. Machine Learning Workflow
-
-Raw Email Dataset
-       │
-       ▼
-Data Understanding
-       │
-       ▼
-EDA & Data Quality Checks
-       │
-       ▼
-Remove Duplicates / Handle Missing Text
-       │
-       ▼
-Train-Test Split (80:20)
-       │
-       ▼
-TF-IDF Vectorization
-       │
-       ▼
-Logistic Regression
-       │
-       ▼
-GridSearchCV Hyperparameter Tuning
-       │
-       ▼
-Model Evaluation
-       │
-       ▼
-Save Pipeline with Joblib
-       │
-       ▼
-Streamlit Web Application
-       │
-       ▼
-Prediction: Spam / Ham
-
-4. Data Understanding & EDA
-
-The project notebook performs the required exploratory analysis, including:
-
-Dataset shape and column inspection
-
-Data types
-
-Target-variable distribution
-
-Missing-value analysis
-
-Duplicate analysis
-
-Email text length / word-count analysis
-
-Univariate analysis
-
-Class distribution visualization
-
-Basic text-based feature analysis
-
-Confusion-matrix visualization after model evaluation
-
-Generated Reports
-
-The reports/ directory contains generated artifacts such as:
-
-reports/
-├── avg_word_count.png
-├── class_distribution.png
-├── confusion_matrix.png
-└── metrics.json
-
-Each visualization is intended to answer a specific analytical question rather than being included only for presentation.
-
-5. Data Cleaning & Preprocessing
-
-The training pipeline performs the following data-quality steps:
-
-Load the CSV file using pandas.
-
-Remove duplicate rows.
-
-Replace missing email text with an empty string.
-
-Convert email text to string format.
-
-Convert the target variable to integer format.
-
-Split the data using stratification to preserve the Spam/Ham class ratio.
-
-Convert text into numerical features using TF-IDF.
-
-Why TF-IDF?
-
-Machine Learning algorithms cannot directly work with raw email text. TF-IDF converts text into numerical features based on the importance of words within the dataset.
-
-The vectorizer also considers the selected n-gram configuration during hyperparameter tuning.
-
-6. Model Building
-
-Final Algorithm
-
-Logistic Regression was selected as the final classifier.
-
-It is well suited for binary classification and performs effectively on high-dimensional sparse text features such as TF-IDF vectors.
-
-Pipeline
-
-The model is implemented as a scikit-learn Pipeline:
-
+```text
 TfidfVectorizer
-      ↓
-LogisticRegression
+        ↓
+MultinomialNB
+```
 
-Keeping preprocessing and classification inside one pipeline helps ensure that the same transformations are automatically applied during training and prediction.
+`GridSearchCV` evaluates the Multinomial Naive Bayes smoothing parameter `clf__alpha` over `[0.1, 0.5, 1.0]`. Model selection uses the F1 score and five-fold cross-validation. The supplied training run selected `alpha = 0.1`.
 
-7. Train-Test Split
+The fitted pipeline is serialized to:
 
-The cleaned dataset is divided into:
+```text
+models/spam_classifier_pipeline.joblib
+```
 
-80% Training data: 4,556 records
+Because the vectorizer and classifier are saved together, the application can receive raw email text without separately reproducing the feature-extraction steps.
 
-20% Testing data: 1,139 records
+## Evaluation Results
 
-The split uses stratify=y so that the Spam/Ham class distribution remains approximately consistent in both sets.
+The following results are recorded in `reports/tuning_results.json` and were produced on the held-out test split from the included dataset.
 
-train_test_split(
-    X,
-    y,
-    test_size=0.20,
-    random_state=42,
-    stratify=y
-)
+| Metric | Score |
+| --- | ---: |
+| Accuracy | 98.95% |
+| Precision | 98.16% |
+| Recall | 97.45% |
+| F1 score | 97.80% |
+| ROC-AUC | 99.93% |
+| Best cross-validation F1 | 96.97% |
 
-8. Hyperparameter Tuning
+The exact values are dataset- and split-specific. They should not be interpreted as guaranteed performance on future or real-world email traffic, particularly when email language, sender behavior, or spam tactics change.
 
-GridSearchCV is used to select a better-performing configuration.
+Additional training artifacts are written to `reports/model_comparison.csv` and `reports/tuning_results.json`. Exploratory-analysis and model-visualization images are stored under `reports/figures/`.
 
-The search explores:
+## Streamlit Application
 
-TF-IDF n-gram range:
-    (1,1)
-    (1,2)
+The user interface is defined in `app.py` and is available online at the [Mail Guard AI live demo](https://mail-guard-spam-filter-ai.streamlit.app/).
 
-Logistic Regression C:
-    1.0
-    2.0
+The application flow is:
 
-The tuning objective is F1 Score, which provides a balance between precision and recall.
+1. Paste an email into the text area.
+2. Select **Check Email**.
+3. The saved pipeline cleans and classifies the message.
+4. The interface displays **SPAM EMAIL** or **HAM — NOT SPAM**.
+5. Spam and Ham probabilities are shown as percentages.
 
-Best Configuration
+If the serialized model is missing, the application reports that the model must be trained first. Probabilities are model outputs and should not be treated as certainty.
 
-Logistic Regression C = 2.0
-TF-IDF n-gram range = (1, 1)
+## Repository Structure
 
-Cross-validation is performed using 3 folds in the supplied training script.
-
-9. Model Evaluation
-
-The tuned model is evaluated on the unseen test set using the required classification metrics.
-
-Metric
-
-Score
-
-Accuracy
-
-99.39%
-
-Precision
-
-99.63%
-
-Recall
-
-97.81%
-
-F1 Score
-
-98.71%
-
-ROC-AUC
-
-99.99%
-
-Confusion Matrix
-
-                 Predicted
-                 Ham   Spam
-Actual Ham       864     1
-Actual Spam        6   268
-
-The model correctly identifies most legitimate and spam emails while producing very few false classifications on the supplied test split.
-
-These metrics describe the included training run and should not be interpreted as guaranteed performance on unseen real-world email traffic.
-
-10. Model Saving
-
-The complete tuned preprocessing + classification pipeline is saved using joblib:
-
-models/spam_classifier.joblib
-
-Because the TF-IDF vectorizer and classifier are stored together, the application can directly load the saved pipeline and perform predictions on raw email text.
-
-11. Streamlit Application
-
-The project includes a simple web interface built with Streamlit.
-
-Application Flow
-
-User pastes email
-       ↓
-Click Predict
-       ↓
-Saved ML Pipeline
-       ↓
-TF-IDF Transformation
-       ↓
-Logistic Regression
-       ↓
-Spam / Ham + Spam Probability
-
-The interface displays:
-
-Predicted class
-
-Spam probability
-
-Basic input validation
-
-A warning that ML predictions should not be treated as absolute guarantees
-
-12. Project Structure
-
-email_spam_classifier_project/
-│
-├── app.py                         # Streamlit application
-├── requirements.txt               # Python dependencies
-├── README.md                      # Project documentation
-├── .gitignore                     # Git ignore rules
-│
+```text
+mail-guard-ai/
+├── app.py                              # Streamlit user interface
+├── requirements.txt                    # Python dependencies
+├── README.md                           # Project documentation
+├── .env                                # Local path and logging configuration
 ├── data/
-│   └── emails.csv                 # Dataset
-│
+│   ├── raw/
+│   │   └── emails.csv                  # Input dataset
+│   └── processed/
+│       └── emails_cleaned.csv          # Generated cleaned dataset
 ├── models/
-│   └── spam_classifier.joblib     # Trained ML pipeline
-│
+│   └── spam_classifier_pipeline.joblib # Serialized fitted pipeline
 ├── notebooks/
-│   └── email_spam_detection.ipynb # EDA + ML workflow
-│
+│   ├── EDA.ipynb                       # Exploratory data analysis
+│   ├── Data_visualisation.ipynb        # Visual analysis
+│   ├── data_cleaning.ipynb             # Data-cleaning workflow
+│   └── spam_classification.ipynb       # Model-classification workflow
 ├── reports/
-│   ├── avg_word_count.png
-│   ├── class_distribution.png
-│   ├── confusion_matrix.png
-│   └── metrics.json
-│
+│   ├── figures/                         # Generated charts and evaluation plots
+│   ├── model_comparison.csv            # Test metrics and training time
+│   └── tuning_results.json             # Best parameters and evaluation results
+├── logs/
+│   └── app.log                         # Application and training logs
 └── src/
-    ├── train_model.py             # Model training + tuning
-    └── predict.py                  # Prediction utility
+    ├── config.py                        # Centralized paths and settings
+    ├── logger.py                        # Logging configuration
+    ├── predict.py                       # Command-line inference utility
+    ├── preprocessing.py                 # Shared text-cleaning functions
+    └── train.py                         # Training, tuning, evaluation, and saving
+```
 
-13. Technologies Used
+## Technologies
 
-Python 3.10+
+| Area | Technology |
+| --- | --- |
+| Language | Python 3.10+ |
+| Data processing | pandas, NumPy |
+| Text features | scikit-learn TF-IDF |
+| Classifier | Multinomial Naive Bayes |
+| Model selection | GridSearchCV |
+| Serialization | joblib |
+| Visualization | Matplotlib, Seaborn, Jupyter Notebook |
+| Application | Streamlit |
+| Configuration | python-dotenv |
 
-pandas — data loading and manipulation
+## Installation
 
-NumPy — numerical operations
+### 1. Clone the repository
 
-scikit-learn — preprocessing, model training, tuning and evaluation
+```bash
+git clone https://github.com/rati-ranjan-04/mail-guard-ai.git
+cd mail-guard-ai
+```
 
-TF-IDF — text feature extraction
+### 2. Create and activate a virtual environment
 
-Logistic Regression — binary classifier
+**macOS/Linux**
 
-GridSearchCV — hyperparameter tuning
-
-joblib — model serialization
-
-Matplotlib — visualization
-
-Jupyter Notebook — experimentation and EDA
-
-Streamlit — web application
-
-14. Installation & Setup
-
-Step 1 — Clone the repository
-
-git clone https://github.com/<your-username>/email-spam-classifier.git
-cd email-spam-classifier
-
-Replace <your-username> and repository name with your actual GitHub details.
-
-Step 2 — Create a virtual environment
-
-Windows PowerShell
-
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-
-Windows CMD
-
-python -m venv .venv
-.venv\Scripts\activate
-
-macOS / Linux
-
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
 
-Step 3 — Upgrade pip
+**Windows PowerShell**
 
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```bash
 python -m pip install --upgrade pip
-
-Step 4 — Install dependencies
-
 pip install -r requirements.txt
+```
 
-15. Run the Project
+The repository includes a `.env` file with default paths. If you create your own environment file, keep secrets and machine-specific configuration out of version control.
 
-Option A — Run the Streamlit Application
+## Running the Project Locally
 
-If the saved model already exists:
+### Run the Streamlit application
 
+The repository already contains a trained pipeline. Start the application from the project root:
+
+```bash
 streamlit run app.py
+```
 
-Then open the local URL displayed by Streamlit, normally:
+Then open the local URL displayed by Streamlit, normally `http://localhost:8501`.
 
-http://localhost:8501
+### Retrain the model
 
-Option B — Retrain the Model
+To rebuild the cleaned dataset, tune the model, evaluate it, save the reports, and serialize the pipeline, run:
 
-To train the model again from the dataset:
+```bash
+python src/train.py
+```
 
-python .\src\train.py
+The command creates or updates:
 
-The script will:
+```text
+data/processed/emails_cleaned.csv
+models/spam_classifier_pipeline.joblib
+reports/model_comparison.csv
+reports/tuning_results.json
+logs/app.log
+```
 
-Load the dataset
+### Run command-line prediction
 
-Remove duplicates
+Pass the email text as a quoted command-line argument:
 
-Perform the train-test split
+```bash
+python src/predict.py "Subject: Congratulations! You have won a free prize!"
+```
 
-Build the TF-IDF + Logistic Regression pipeline
+The utility returns a dictionary containing the numeric label, readable label, Spam probability, and Ham probability. It can also be imported from another Python program:
 
-Run GridSearchCV
+```python
+from src.predict import load_model, predict_email
 
-Evaluate the model
+model = load_model()
+result = predict_email(model, "Subject: Congratulations! You have won a free prize!")
+print(result)
+```
 
-Save the trained pipeline
+### Explore the notebooks
 
-Save evaluation metrics
+Install Jupyter if it is not already available, then run:
 
-Outputs:
-
-models/spam_classifier.joblib
-reports/metrics.json
-
-Option C — Run Command-Line Prediction
-
-python src/predict.py
-
-For a custom prediction, the prediction helper can also be imported into another Python program:
-
-from src.predict import predict_email
-
-label, probability = predict_email(
-    "Subject: Congratulations! You have won a free prize!"
-)
-
-print("Prediction:", label)
-print("Spam probability:", probability)
-
-16. Run the Jupyter Notebook
-
-Start Jupyter:
-
+```bash
 jupyter notebook
+```
 
-Then open:
+Open the notebooks in `notebooks/` to review the exploratory analysis, cleaning steps, visualizations, and classification workflow.
 
-notebooks/email_spam_detection.ipynb
+## Deployment
 
-The notebook can be used to demonstrate the academic workflow from data understanding through model evaluation.
+The deployed Streamlit application is connected to this project at [mail-guard-spam-filter-ai.streamlit.app](https://mail-guard-spam-filter-ai.streamlit.app/). A comparable deployment should include `app.py`, `requirements.txt`, the `src/` modules, and `models/spam_classifier_pipeline.joblib`.
 
-17. GitHub Setup
+When deploying a retrained model, verify that the deployment environment uses compatible versions of Python, scikit-learn, and joblib. The model artifact is generated with the dependency versions declared in `requirements.txt`.
 
-After completing the project locally:
+## Limitations
 
-git init
-git add .
-git commit -m "Add email spam classification ML project"
-git branch -M main
-git remote add origin https://github.com/<your-username>/email-spam-classifier.git
-git push -u origin main
+This is an academic demonstration rather than a complete production email-security product. The classifier uses email text only; it does not inspect attachments, sender reputation, URLs, headers, authentication signals, or mailbox context. The included dataset is limited relative to modern email traffic, and spam tactics can change over time.
 
-Before pushing, verify the repository contents:
+A high score on one held-out split does not guarantee equivalent performance in deployment. Before using a model in a high-impact workflow, evaluate it on representative, recent data, monitor false positives and false negatives, and establish an appropriate review process.
 
-git status
-git ls-files
+## Potential Improvements
 
-Recommended .gitignore
+Future work could add character-level features, richer word and character n-grams, additional classifiers such as linear SVM, threshold tuning, URL and domain features, email-header metadata, attachment signals, a larger and more recent dataset, monitoring, scheduled retraining, and authenticated API access.
 
-.venv/
-__pycache__/
-*.pyc
-.ipynb_checkpoints/
-.DS_Store
-.env
+## Academic Project Coverage
 
-If your dataset is too large for GitHub, do not force-add it. Instead, provide the dataset source/download instructions in this README.
+| Area | Implemented |
+| --- | --- |
+| Problem definition and business objective | Yes |
+| Dataset inspection and cleaning | Yes |
+| Duplicate and empty-text handling | Yes |
+| Exploratory data analysis | Yes |
+| Text preprocessing and TF-IDF features | Yes |
+| Stratified train-test split | Yes |
+| Multinomial Naive Bayes model | Yes |
+| GridSearchCV hyperparameter tuning | Yes |
+| Classification metrics and ROC-AUC | Yes |
+| Model serialization with joblib | Yes |
+| Streamlit application | Yes |
+| Local command-line inference | Yes |
+| Cloud deployment | Yes |
 
-18. Deployment
+## References
 
-The Streamlit app can be deployed to a cloud platform that supports Python/Streamlit applications.
+[1]: https://github.com/rati-ranjan-04/mail-guard-ai "Mail Guard AI source repository"
 
-Typical deployment flow:
+[2]: https://mail-guard-spam-filter-ai.streamlit.app/ "Mail Guard AI Streamlit application"
 
-GitHub Repository
-       ↓
-Cloud Deployment Platform
-       ↓
-Install requirements.txt
-       ↓
-Run app.py
-       ↓
-Public Streamlit Application URL
+[3]: https://scikit-learn.org/stable/modules/feature_extraction.html#tfidf-term-weighting "scikit-learn TF-IDF documentation"
 
-For deployment, make sure these files are committed:
+[4]: https://scikit-learn.org/stable/modules/naive_bayes.html "scikit-learn Naive Bayes documentation"
 
-app.py
-requirements.txt
-models/spam_classifier.joblib
-python .\src\predict.py
+[5]: https://docs.streamlit.io/ "Streamlit documentation"
 
-If the deployment platform requires a specific Python version, pin the version according to that platform's current supported runtime.
+## License
 
-19. Limitations
-
-This project is designed primarily as an academic demonstration.
-
-The dataset is limited compared with the volume and diversity of modern email traffic.
-
-Spam patterns can change over time.
-
-Text-only classification cannot inspect attachments, sender reputation, URLs, headers, or other email metadata.
-
-Model probabilities should not be treated as absolute certainty.
-
-Very high test performance on one dataset does not guarantee equivalent production performance.
-
-20. Possible Future Improvements
-
-The system could be extended with:
-
-Character-level TF-IDF features
-
-Word + character n-gram combination
-
-Naive Bayes and Linear SVM model comparison
-
-Class-weight tuning
-
-Threshold optimization for business requirements
-
-URL and domain features
-
-Email-header metadata
-
-Attachment-related features
-
-Larger and more recent datasets
-
-Model monitoring and periodic retraining
-
-Docker-based deployment
-
-Authentication and API integration
-
-21. Academic Checklist Coverage
-
-Requirement
-
-Status
-
-Problem Statement
-
-✅
-
-Business Objective
-
-✅
-
-Dataset Collection
-
-✅
-
-Data Understanding
-
-✅
-
-EDA
-
-✅
-
-Missing Values
-
-✅
-
-Duplicate Handling
-
-✅
-
-Data Cleaning
-
-✅
-
-Text Preprocessing
-
-✅
-
-Feature Extraction
-
-✅ TF-IDF
-
-Train-Test Split
-
-✅
-
-Model Building
-
-✅ Logistic Regression
-
-Classification Metrics
-
-✅
-
-Confusion Matrix
-
-✅
-
-Hyperparameter Tuning
-
-✅ GridSearchCV
-
-Model Saving
-
-✅ joblib
-
-Streamlit Application
-
-✅
-
-Deployment Ready
-
-✅
-
-GitHub Structure
-
-✅
-
-22. Final Project Summary
-
-Project: Email Spam Classification System
-Domain: Natural Language Processing / Machine Learning
-Problem: Binary text classification
-Input: Email text
-Output: Spam or Ham
-Feature Extraction: TF-IDF
-Final Model: Logistic Regression
-Hyperparameter Tuning: GridSearchCV
-Model Storage: Joblib
-Application: Streamlit
-
-The project demonstrates a complete, reproducible machine-learning workflow suitable for an academic submission and as a foundation for a more advanced spam-filtering application.
+No license file is currently included in the repository. Add an explicit open-source license before redistributing the project or accepting external contributions.
