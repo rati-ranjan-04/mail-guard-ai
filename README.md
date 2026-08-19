@@ -213,7 +213,7 @@ The repository includes a `.env` file with default paths. If you create your own
 The repository already contains a trained pipeline. Start the application from the project root:
 
 ```bash
-streamlit run app.py
+python -m streamlit run app.py
 ```
 
 Then open the local URL displayed by Streamlit, normally `http://localhost:8501`.
