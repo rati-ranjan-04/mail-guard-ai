@@ -163,8 +163,40 @@ st.markdown(
             transform: translateY(-1px);
         }
 
-        textarea {
+        /* High-contrast email input */
+        [data-testid="stTextArea"] {
+            margin-bottom: 0.75rem;
+        }
+
+        [data-testid="stTextArea"] label {
+            color: var(--text) !important;
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+        }
+
+        [data-testid="stTextArea"] textarea {
+            background-color: #ffffff !important;
+            color: #172033 !important;
+            -webkit-text-fill-color: #172033 !important;
+            caret-color: #6d5dfc !important;
+            border: 2px solid #cfd5e2 !important;
             border-radius: 14px !important;
+            font-size: 1rem !important;
+            line-height: 1.6 !important;
+            padding: 1rem !important;
+            box-shadow: 0 5px 16px rgba(25, 31, 51, 0.06) !important;
+        }
+
+        [data-testid="stTextArea"] textarea::placeholder {
+            color: #7a8496 !important;
+            -webkit-text-fill-color: #7a8496 !important;
+            opacity: 1 !important;
+        }
+
+        [data-testid="stTextArea"] textarea:focus {
+            border-color: #6d5dfc !important;
+            box-shadow: 0 0 0 3px rgba(109, 93, 252, 0.18) !important;
+            outline: none !important;
         }
 
         [data-testid="stMetric"] {
@@ -232,11 +264,12 @@ left, right = st.columns([1.55, 1], gap="large")
 
 with left:
     st.markdown('<div class="section-title">Analyze an email</div>', unsafe_allow_html=True)
+    st.caption("Paste the subject and full message below. Your input will appear in a high-contrast editor.")
     email = st.text_area(
         "Email content",
         key="email_text",
         height=255,
-        label_visibility="collapsed",
+        label_visibility="visible",
         placeholder="Subject: Congratulations! You have won a prize...",
     )
 
