@@ -212,6 +212,55 @@ st.markdown(
             font-size: 0.78rem;
             padding: 1.8rem 0 0.5rem;
         }
+
+        /* Large, distinguishable probability display */
+        .prob-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 0.75rem 0 1.25rem;
+        }
+
+        .prob-box {
+            border-radius: 18px;
+            padding: 1.1rem 1rem 1.3rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            background: #f8f9fd;
+        }
+
+        .prob-box.spam {
+            background: linear-gradient(180deg, #fff1f1, #ffffff);
+            border-color: #f8c9c9;
+        }
+
+        .prob-box.ham {
+            background: linear-gradient(180deg, #eafff2, #ffffff);
+            border-color: #b9ecc9;
+        }
+
+        .prob-box-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .prob-box-value {
+            font-size: clamp(2.4rem, 6vw, 3.6rem);
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .prob-box.spam .prob-box-value {
+            color: #dc2626;
+        }
+
+        .prob-box.ham .prob-box-value {
+            color: #16a34a;
+        }
     </style>
     """,
     unsafe_allow_html=True,
@@ -314,9 +363,21 @@ if analyze:
                 )
 
             st.markdown("### Classification confidence")
-            metric_left, metric_right = st.columns(2)
-            metric_left.metric("Spam probability", f"{spam_probability:.2f}%")
-            metric_right.metric("Ham probability", f"{ham_probability:.2f}%")
+            st.markdown(
+                f"""
+                <div class="prob-grid">
+                    <div class="prob-box spam">
+                        <div class="prob-box-label">Spam probability</div>
+                        <div class="prob-box-value">{spam_probability:.1f}%</div>
+                    </div>
+                    <div class="prob-box ham">
+                        <div class="prob-box-label">Ham probability</div>
+                        <div class="prob-box-value">{ham_probability:.1f}%</div>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
             st.progress(spam_probability / 100, text=f"Spam likelihood: {spam_probability:.2f}%")
 
