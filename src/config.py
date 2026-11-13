@@ -42,3 +42,19 @@ MODEL_PATH = _resolve(os.getenv("MODEL_PATH", "models/spam_classifier_pipeline.j
 # --- Logging settings ---
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 LOG_FILE = _resolve(os.getenv("LOG_FILE", "logs/app.log"))
+
+
+# --- Mail Guard AI platform settings (added in v2) ---
+CALIBRATION_PATH = _resolve(os.getenv("CALIBRATION_PATH", "models/calibration.json"))
+MANIFEST_PATH = _resolve(os.getenv("MANIFEST_PATH", "models/manifest.json"))
+VERSIONS_DIR = _resolve(os.getenv("VERSIONS_DIR", "models/versions"))
+REPORTS_DIR = _resolve(os.getenv("REPORTS_DIR", "reports"))
+HISTORY_DB = _resolve(os.getenv("HISTORY_DB", "data/scan_history.db"))
+HISTORY_MAX_ROWS = int(os.getenv("HISTORY_MAX_ROWS", "10000"))
+# Set to 1 to refuse to load a model whose SHA-256 differs from models/manifest.json
+STRICT_MODEL_INTEGRITY = os.getenv("STRICT_MODEL_INTEGRITY", "0") == "1"
+
+# Optional external reputation APIs. Read from the environment ONLY; never hard-code,
+# print or log these. Leave empty to keep the app fully offline.
+VIRUSTOTAL_API_KEY = os.getenv("VIRUSTOTAL_API_KEY", "")
+GOOGLE_SAFE_BROWSING_API_KEY = os.getenv("GOOGLE_SAFE_BROWSING_API_KEY", "")

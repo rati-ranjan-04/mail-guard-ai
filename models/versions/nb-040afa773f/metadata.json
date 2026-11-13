@@ -1,0 +1,24 @@
+{
+  "version": "nb-040afa773f",
+  "created_at": "2026-11-03T20:14:07+00:00",
+  "seed": 42,
+  "split": "stratified 80/20, random_state=42 (same as train.py)",
+  "dataset": {
+    "file": "emails.csv",
+    "sha256": "a5d0d75d15d370ef2dd3229b30204b18deab6d3fd249206e89a2c58f901bcc77",
+    "rows_after_cleaning": 5695,
+    "train_rows": 4556,
+    "test_rows_original": 1139,
+    "test_rows_leak_free": 1086,
+    "removed_overlap": 53,
+    "spam_rate": 0.2402107111501317,
+    "eval_spam_rate": 0.2523020257826888
+  },
+  "libs": {
+    "python": "3.13.18",
+    "scikit-learn": "1.8.0",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5"
+  },
+  "train_seconds_total": 49.0
+}

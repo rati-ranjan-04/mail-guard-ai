@@ -1,8 +1,8 @@
-pandas
+# Runtime
+pandas>=2.1
 numpy
-scikit-learn==1.8.0
-matplotlib
-seaborn
+scikit-learn==1.8.0      # pinned: the shipped joblib model was created with this version
 joblib==1.5.3
-streamlit
+streamlit>=1.55,<2
 python-dotenv
+reportlab>=4.0

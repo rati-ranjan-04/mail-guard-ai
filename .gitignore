@@ -2,23 +2,25 @@
 __pycache__/
 *.py[cod]
 *.egg-info/
+.pytest_cache/
 
 # Jupyter
 .ipynb_checkpoints/
 
-# Environment
+# Environment and secrets (use .env.example as the template)
+.env
 .venv/
 venv/
 env/
+.streamlit/secrets.toml
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Streamlit
-.streamlit/
-
-# Large / generated data (keep small samples only)
+# Runtime data: logs and scan history can contain sensitive metadata
+logs/
+data/scan_history.db
 data/processed/*.csv
 
 # IDE

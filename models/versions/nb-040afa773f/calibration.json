@@ -1,0 +1,11 @@
+{
+  "method": "platt",
+  "a": 1.2191130865498534,
+  "b": 0.29596431687850483,
+  "meta": {
+    "for_model_sha": "21a543e1d7361d10617f46c494937db6a1d4607ca81e15feb7e30771068ce68a",
+    "fitted_on": "out-of-fold NB log-odds, de-duplicated training rows",
+    "n_fit": 4451,
+    "version": "nb-040afa773f"
+  }
+}

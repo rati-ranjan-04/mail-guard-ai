@@ -27,6 +27,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 from config import LOG_LEVEL, LOG_FILE
+from mailguard.security import RedactingFilter
 
 # Make sure the logs/ folder exists before we try to write to it.
 LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -60,6 +61,7 @@ def get_logger(name: str = "spam_classification") -> logging.Logger:
     # --- Console handler: prints to the terminal, same as print() would ---
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
+    console_handler.addFilter(RedactingFilter())  # never log addresses/URLs/keys
     logger.addHandler(console_handler)
 
     # --- File handler: also saves every log line to logs/app.log ---
@@ -67,6 +69,7 @@ def get_logger(name: str = "spam_classification") -> logging.Logger:
         LOG_FILE, maxBytes=1_000_000, backupCount=3, encoding="utf-8"
     )
     file_handler.setFormatter(formatter)
+    file_handler.addFilter(RedactingFilter())
     logger.addHandler(file_handler)
 
     return logger

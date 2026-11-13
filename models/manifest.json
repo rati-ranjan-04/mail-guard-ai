@@ -1,0 +1,12 @@
+{
+  "model_file": "spam_classifier_pipeline.joblib",
+  "sha256": "21a543e1d7361d10617f46c494937db6a1d4607ca81e15feb7e30771068ce68a",
+  "registered_at": "2026-11-03T20:14:07+00:00",
+  "sklearn_version_at_registration": "1.8.0",
+  "version": "nb-040afa773f",
+  "dataset_sha256": "a5d0d75d15d370ef2dd3229b30204b18deab6d3fd249206e89a2c58f901bcc77",
+  "seed": 42,
+  "primary_model": "Multinomial Naive Bayes",
+  "calibrated": true,
+  "parity_agreement_with_retrained": 1.0
+}

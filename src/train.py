@@ -90,6 +90,15 @@ def main():
     joblib.dump(best_model, MODEL_PATH)
     logger.info("Saved Naive Bayes model to %s", MODEL_PATH)
 
+    # Register the new file's SHA-256 so the app can verify it before loading (pickle safety).
+    try:
+        from config import MANIFEST_PATH
+        from mailguard.registry import write_manifest
+        write_manifest(MODEL_PATH, MANIFEST_PATH, {"version": "train.py-run", "calibrated": False})
+        logger.info("Wrote model manifest. Run `python src/train_compare.py` to refresh calibration and reports.")
+    except Exception as exc:  # never break training because of the manifest
+        logger.warning("Could not write model manifest: %s", type(exc).__name__)
+
 
 if __name__ == "__main__":
     main()

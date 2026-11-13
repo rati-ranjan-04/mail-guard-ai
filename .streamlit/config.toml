@@ -1,0 +1,39 @@
+# Native Streamlit theming. The app follows the viewer's setting
+# (menu > Settings > Theme: Light / Dark / Use system setting).
+[theme]
+font = "sans-serif"
+baseRadius = "0.6rem"
+showSidebarBorder = true
+
+[theme.dark]
+primaryColor = "#4c8dff"
+backgroundColor = "#0a1226"
+secondaryBackgroundColor = "#121c38"
+textColor = "#e8edf8"
+borderColor = "#25325a"
+codeBackgroundColor = "#0e1730"
+
+[theme.light]
+primaryColor = "#1f5fd1"
+backgroundColor = "#f3f6fc"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#0b1b3a"
+borderColor = "#d3dcee"
+codeBackgroundColor = "#eaeff9"
+
+[theme.dark.sidebar]
+backgroundColor = "#070d1d"
+secondaryBackgroundColor = "#101a35"
+
+[theme.light.sidebar]
+backgroundColor = "#e9eef9"
+secondaryBackgroundColor = "#ffffff"
+
+[server]
+# Keep Streamlit's default protections ON (the old devcontainer disabled them).
+enableXsrfProtection = true
+enableCORS = true
+maxUploadSize = 5
+
+[browser]
+gatherUsageStats = false
