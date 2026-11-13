@@ -14,3 +14,6 @@
 2026-08-19 11:27:56 | INFO | __main__ | Loading data from E:\mail-guard-spam-filter\mail-guard-ai\data\raw\emails.csv
 2026-08-19 11:27:57 | INFO | __main__ | Tuning Multinomial Naive Bayes...
 2026-08-19 11:28:48 | INFO | __main__ | Saved Naive Bayes model to E:\mail-guard-spam-filter\mail-guard-ai\models\spam_classifier_pipeline.joblib
+2026-11-13 19:17:33 | INFO | mailguard.engine | Engine ready (model nb-040afa773f, integrity=verified, calibrated=True)
+2026-11-13 19:18:31 | INFO | mailguard.engine | Scan complete: verdict=Likely phishing score=100 severity=Critical urls=1
+2026-11-13 19:18:49 | INFO | mailguard.engine | Scan complete: verdict=Likely phishing score=100 severity=Critical urls=1
